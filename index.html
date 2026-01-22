@@ -1,154 +1,91 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Kenya Power Outage Risk Predictor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #0a1b33;
+  color: #f3f7ff;
+  margin: 0;
+}
+.container {
+  max-width: 760px;
+  margin: auto;
+  background: rgba(10, 27, 51, 0.85);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(5px);
+}
+h2 {
+  color: #b7d6ff;
+  margin-bottom: 5px;
+}
+.subtitle {
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+label { font-weight: bold; color: #d6e4ff; }
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 7px 0 15px 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: #f3f7ff;
+}
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #0a1b33;
-      color: #f3f7ff;
-      margin: 0;
-    }
-    .container {
-      max-width: 760px;
-      margin: auto;
-      background: rgba(10, 27, 51, 0.85);
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-      border: 1px solid rgba(255,255,255,0.15);
-      backdrop-filter: blur(5px);
-    }
-    h2 {
-      color: #b7d6ff;
-      margin-bottom: 5px;
-    }
-    .subtitle {
-      color: rgba(255,255,255,0.6);
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-    label { font-weight: bold; color: #d6e4ff; }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin: 7px 0 15px 0;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.06);
-      color: #f3f7ff;
-    }
-    button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #2f7bff, #00d4ff);
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .low { color: #5eead4; }
-    .medium { color: #fbbf24; }
-    .high { color: #fb7185; }
-    .comment { font-size: 14px; margin-top: 10px; color: rgba(255,255,255,0.75); }
+select {
+  color: black !important;
+  background: white !important;
+}
 
-    /* Tech visuals */
-    .bg-tech {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(63, 155, 255, 0.35), transparent 55%),
-        radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.25), transparent 60%),
-        linear-gradient(135deg, rgba(10, 27, 51, 1), rgba(5, 10, 22, 1));
-      z-index: -1;
-    }
-    .grid-lines {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-      background-size: 60px 60px;
-      z-index: -1;
-      opacity: 0.35;
-    }
-  </style>
-</head>
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #2f7bff, #00d4ff);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+}
+#result {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.low { color: #5eead4; }
+.medium { color: #fbbf24; }
+.high { color: #fb7185; }
+.comment { font-size: 14px; margin-top: 10px; color: rgba(255,255,255,0.75); }
 
-<body>
-  <div class="bg-tech"></div>
-  <div class="grid-lines"></div>
-
-  <div class="container">
-    <h2>⚡ Kenya Power Outage Risk Predictor</h2>
-    <div class="subtitle">Real-time weather + smart risk prediction for Kenyan counties</div>
-
-    <label>County:</label>
-    <select id="county">
-      <option>Nairobi</option>
-      <option>Kiambu</option>
-      <option>Machakos</option>
-      <option>Kajiado</option>
-      <option>Nakuru</option>
-      <option>Kisumu</option>
-      <option>Uasin Gishu</option>
-    </select>
-
-    <label>City:</label>
-    <input type="text" id="city" placeholder="e.g., Nairobi" value="Nairobi">
-
-    <label>Month:</label>
-    <select id="month">
-      <option value="1">January</option>
-      <option value="2">February</option>
-      <option value="3">March</option>
-      <option value="4">April</option>
-      <option value="5">May</option>
-      <option value="6">June</option>
-      <option value="7">July</option>
-      <option value="8">August</option>
-      <option value="9">September</option>
-      <option value="10">October</option>
-      <option value="11">November</option>
-      <option value="12">December</option>
-    </select>
-
-    <label>Hour (0–23):</label>
-    <input type="number" id="hour" min="0" max="23" value="18">
-
-    <label>Is it raining?</label>
-    <select id="rain">
-      <option>No</option>
-      <option>Yes</option>
-    </select>
-
-    <button onclick="predict()">Predict Risk</button>
-
-    <div id="result"></div>
-    <div class="comment" id="comment"></div>
-
-    <canvas id="riskChart" style="margin-top: 30px;"></canvas>
-  </div>
-
-  <script src="app.js"></script>
-</body>
-</html>
+/* Tech visuals */
+.bg-tech {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(63, 155, 255, 0.35), transparent 55%),
+    radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.25), transparent 60%),
+    linear-gradient(135deg, rgba(10, 27, 51, 1), rgba(5, 10, 22, 1));
+  z-index: -1;
+}
+.grid-lines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  z-index: -1;
+  opacity: 0.35;
+}
