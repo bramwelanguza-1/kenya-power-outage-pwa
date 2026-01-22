@@ -17,7 +17,50 @@ function predict() {
 
   risk = Math.min(risk, 0.95);
 
-  document.getElementById("result").innerText =
-    "Estimated outage risk for " + county + ": " +
-    Math.round(risk * 100) + "%";
+  const percentage = Math.round(risk * 100);
+  let riskClass = "low";
+  let comment = "Normal operation expected.";
+
+  if (percentage >= 70) {
+    riskClass = "high";
+    comment = "⚠️ High risk of outage. Prepare backup power.";
+  } else if (percentage >= 40) {
+    riskClass = "medium";
+    comment = "⚠️ Moderate risk. Stay alert and plan.";
+  }
+
+  document.getElementById("result").innerHTML =
+    `Estimated outage risk for ${county}: <span class="${riskClass}">${percentage}%</span>`;
+
+  document.getElementById("comment").innerText = comment;
+
+  drawChart(percentage);
+}
+
+function drawChart(value) {
+  const ctx = document.getElementById("riskChart").getContext("2d");
+
+  if (window.riskChart) window.riskChart.destroy();
+
+  window.riskChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Risk", "Safe"],
+      datasets: [{
+        data: [value, 100 - value],
+        backgroundColor: ["#f43f5e", "#22c55e"],
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: "70%",
+      plugins: {
+        legend: { display: true },
+        title: {
+          display: true,
+          text: "Outage Risk Visualization"
+        }
+      }
+    }
+  });
 }
