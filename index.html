@@ -3,53 +3,72 @@
 <head>
   <title>Kenya Power Outage Risk Predictor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f8fc; }
+    .container { max-width: 700px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h2 { color: #1a3a8a; }
+    label { font-weight: bold; }
+    input, select { width: 100%; padding: 8px; margin: 5px 0 15px 0; border-radius: 8px; border: 1px solid #ddd; }
+    button { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #0a5cff; color: white; font-size: 16px; }
+    #result { margin-top: 15px; font-size: 18px; font-weight: bold; }
+    .low { color: green; }
+    .medium { color: orange; }
+    .high { color: red; }
+    .comment { font-size: 14px; margin-top: 10px; color: #333; }
+  </style>
 </head>
 
 <body>
+  <div class="container">
+    <h2>⚡ Kenya Power Outage Risk Predictor</h2>
 
-<h2>⚡ Kenya Power Outage Risk Predictor (Web Demo)</h2>
+    <label>County:</label>
+    <select id="county">
+      <option>Nairobi</option>
+      <option>Kiambu</option>
+      <option>Machakos</option>
+      <option>Kajiado</option>
+      <option>Nakuru</option>
+      <option>Kisumu</option>
+      <option>Uasin Gishu</option>
+    </select>
 
-<label>County:</label><br>
-<select id="county">
-  <option>Nairobi</option>
-  <option>Kiambu</option>
-  <option>Machakos</option>
-  <option>Kajiado</option>
-  <option>Nakuru</option>
-  <option>Kisumu</option>
-  <option>Uasin Gishu</option>
-</select><br><br>
+    <label>Month:</label>
+    <select id="month">
+      <option value="1">January</option>
+      <option value="2">February</option>
+      <option value="3">March</option>
+      <option value="4">April</option>
+      <option value="5">May</option>
+      <option value="6">June</option>
+      <option value="7">July</option>
+      <option value="8">August</option>
+      <option value="9">September</option>
+      <option value="10">October</option>
+      <option value="11">November</option>
+      <option value="12">December</option>
+    </select>
 
-<label>Month:</label><br>
-<select id="month">
-  <option value="1">January</option>
-  <option value="2">February</option>
-  <option value="3">March</option>
-  <option value="4">April</option>
-  <option value="5">May</option>
-  <option value="6">June</option>
-  <option value="7">July</option>
-  <option value="8">August</option>
-  <option value="9">September</option>
-  <option value="10">October</option>
-  <option value="11">November</option>
-  <option value="12">December</option>
-</select><br><br>
+    <label>Hour (0–23):</label>
+    <input type="number" id="hour" min="0" max="23" value="18">
 
-<label>Hour (0–23):</label><br>
-<input type="number" id="hour" min="0" max="23" value="18"><br><br>
+    <label>Is it raining?</label>
+    <select id="rain">
+      <option>No</option>
+      <option>Yes</option>
+    </select>
 
-<label>Is it raining?</label><br>
-<select id="rain">
-  <option>No</option>
-  <option>Yes</option>
-</select><br><br>
+    <button onclick="predict()">Predict Risk</button>
 
-<button onclick="predict()">Predict Risk</button>
+    <div id="result"></div>
+    <div class="comment" id="comment"></div>
 
-<h3 id="result"></h3>
+    <canvas id="riskChart" style="margin-top: 30px;"></canvas>
+  </div>
 
-<script src="app.js"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>
