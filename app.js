@@ -79,4 +79,3 @@ function drawChart(value) {
     }
   });
 }
-
