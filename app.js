@@ -1,4 +1,4 @@
-let riskChartObj = null;  // <-- Safe variable
+let riskChartObj = null;
 
 async function predict() {
   try {
@@ -6,14 +6,15 @@ async function predict() {
     const rain = document.getElementById("rain").value;
     const month = Number(document.getElementById("month").value);
     const county = document.getElementById("county").value;
-    const city = county;  // using county as location instead
-
     const day = document.getElementById("day").value;
+
+    // Use county name for weather API
+    const location = county;
 
     const apiKey = "7f35afb7f560a5f4493ba7fa3f08c60c";
 
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city},KE&appid=${apiKey}`
+      `https://api.openweathermap.org/data/2.5/weather?q=${location},KE&appid=${apiKey}`
     );
 
     if (!response.ok) {
@@ -54,7 +55,7 @@ async function predict() {
     }
 
     document.getElementById("result").innerHTML =
-      `Estimated outage risk for ${county} (${city}) on ${day}: <span class="${riskClass}">${percentage}%</span>`;
+      `Estimated outage risk for ${county} on ${day}: <span class="${riskClass}">${percentage}%</span>`;
 
     document.getElementById("comment").innerText =
       comment + " (Weather from OpenWeatherMap)";
@@ -69,7 +70,6 @@ async function predict() {
 function drawChart(value) {
   const ctx = document.getElementById("riskChart").getContext("2d");
 
-  // Destroy previous chart safely
   if (riskChartObj && typeof riskChartObj.destroy === "function") {
     riskChartObj.destroy();
   }
