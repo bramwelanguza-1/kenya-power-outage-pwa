@@ -4,29 +4,17 @@ async function predict() {
   const month = Number(document.getElementById("month").value);
   const county = document.getElementById("county").value;
   const city = document.getElementById("city").value;
+  const day = document.getElementById("day").value;
 
   const apiKey = "7f35afb7f560a5f4493ba7fa3f08c60c";
 
-  let rainReal = false;
+  const response = await fetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${city},KE&appid=${apiKey}`
+  );
+  const weather = await response.json();
 
-  try {
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city},KE&appid=${apiKey}`
-    );
+  const rainReal = weather.weather[0].main.toLowerCase().includes("rain");
 
-    const weather = await response.json();
-
-    if (response.status !== 200) {
-      throw new Error(weather.message || "Weather API error");
-    }
-
-    rainReal = weather.weather[0].main.toLowerCase().includes("rain");
-  } catch (err) {
-    document.getElementById("comment").innerText =
-      "⚠️ Weather API failed: " + err.message + " (Using default logic)";
-  }
-
-  // Prediction logic
   let risk = 0.15;
 
   if (hour >= 18 && hour <= 22) risk += 0.25;
@@ -37,6 +25,11 @@ async function predict() {
 
   if (county === "Nairobi" || county === "Kiambu") risk += 0.15;
   if (county === "Kisumu") risk += 0.1;
+
+  // NEW: Day logic
+  if (day === "Friday" || day === "Saturday" || day === "Sunday") {
+    risk += 0.08;
+  }
 
   risk = Math.min(risk, 0.95);
   const percentage = Math.round(risk * 100);
@@ -53,13 +46,10 @@ async function predict() {
   }
 
   document.getElementById("result").innerHTML =
-    `Estimated outage risk for ${county} (${city}): <span class="${riskClass}">${percentage}%</span>`;
+    `Estimated outage risk for ${county} (${city}) on ${day}: <span class="${riskClass}">${percentage}%</span>`;
 
-  // Only overwrite comment if API works
-  if (!document.getElementById("comment").innerText.includes("Weather API failed")) {
-    document.getElementById("comment").innerText =
-      comment + " (Weather from OpenWeatherMap)";
-  }
+  document.getElementById("comment").innerText =
+    comment + " (Weather from OpenWeatherMap)";
 
   drawChart(percentage);
 }
