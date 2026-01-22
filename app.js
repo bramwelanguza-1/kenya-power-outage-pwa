@@ -6,7 +6,7 @@ async function predict() {
   const city = document.getElementById("city").value;
 
   // OpenWeatherMap API Key
-  const apiKey = "YOUR_OPENWEATHERMAP_API_KEY";
+  const apiKey = "7f35afb7f560a5f4493ba7fa3f08c60c";
 
   // Fetch real weather
   const response = await fetch(
