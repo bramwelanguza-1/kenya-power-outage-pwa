@@ -9,7 +9,6 @@ async function predict() {
 
     const apiKey = "7f35afb7f560a5f4493ba7fa3f08c60c";
 
-    // API call
     const response = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${city},KE&appid=${apiKey}`
     );
@@ -32,6 +31,7 @@ async function predict() {
     if (county === "Nairobi" || county === "Kiambu") risk += 0.15;
     if (county === "Kisumu") risk += 0.1;
 
+    // Day logic
     if (day === "Friday" || day === "Saturday" || day === "Sunday") {
       risk += 0.08;
     }
@@ -66,7 +66,9 @@ async function predict() {
 function drawChart(value) {
   const ctx = document.getElementById("riskChart").getContext("2d");
 
-  if (window.riskChart) window.riskChart.destroy();
+  if (window.riskChart && typeof window.riskChart.destroy === "function") {
+    window.riskChart.destroy();
+  }
 
   window.riskChart = new Chart(ctx, {
     type: "doughnut",
