@@ -5,16 +5,19 @@ async function predict() {
   const county = document.getElementById("county").value;
   const city = document.getElementById("city").value;
 
-  // 1. Get real weather data from OpenWeatherMap
-  const apiKey = "7f35afb7f560a5f4493ba7fa3f08c60c";
+  // OpenWeatherMap API Key
+  const apiKey = "YOUR_OPENWEATHERMAP_API_KEY";
+
+  // Fetch real weather
   const response = await fetch(
     `https://api.openweathermap.org/data/2.5/weather?q=${city},KE&appid=${apiKey}`
   );
-
   const weather = await response.json();
+
+  // Determine if it is raining in real weather
   const rainReal = weather.weather[0].main.toLowerCase().includes("rain");
 
-  // 2. Improve risk logic using real weather
+  // Prediction logic
   let risk = 0.15;
 
   if (hour >= 18 && hour <= 22) risk += 0.25;
@@ -48,3 +51,32 @@ async function predict() {
 
   drawChart(percentage);
 }
+
+function drawChart(value) {
+  const ctx = document.getElementById("riskChart").getContext("2d");
+
+  if (window.riskChart) window.riskChart.destroy();
+
+  window.riskChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Risk", "Safe"],
+      datasets: [{
+        data: [value, 100 - value],
+        backgroundColor: ["#fb7185", "#22c55e"],
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: "70%",
+      plugins: {
+        legend: { display: true },
+        title: {
+          display: true,
+          text: "Outage Risk Visualization"
+        }
+      }
+    }
+  });
+}
+
