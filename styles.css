@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #071A3D; /* dark blue */
+  background: #071A3D;
   color: white;
 }
 
@@ -32,19 +32,21 @@ label {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
-  color: black; /* changed to black as requested */
+  color: black;
 }
 
+/* INPUT STYLES */
 input, select {
   width: 100%;
   padding: 10px;
   border-radius: 10px;
   border: none;
   outline: none;
-  background: rgba(255, 255, 255, 0.15);
+  background: black;   /* 🔥 dropdowns are now black */
   color: white;
 }
 
+/* BUTTON */
 button {
   width: 100%;
   padding: 12px;
