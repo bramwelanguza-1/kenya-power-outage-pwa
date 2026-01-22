@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Test App</title>
+  <title>Kenya Power Outage Risk Predictor</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
 <body>
-  <h1>✅ GitHub Pages Works</h1>
+
+  <h2>⚡ Kenya Power Outage Risk Predictor</h2>
+
+  <label>Hour (0–23):</label><br>
+  <input type="number" id="hour" min="0" max="23" value="18"><br><br>
+
+  <label>Is it raining?</label><br>
+  <select id="rain">
+    <option>No</option>
+    <option>Yes</option>
+  </select><br><br>
+
+  <button onclick="predict()">Predict Risk</button>
+
+  <h3 id="result"></h3>
+
+  <script src="app.js"></script>
+
 </body>
 </html>
