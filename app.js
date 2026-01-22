@@ -1,3 +1,5 @@
+let riskChartObj = null;  // <-- Safe variable
+
 async function predict() {
   try {
     const hour = Number(document.getElementById("hour").value);
@@ -66,11 +68,12 @@ async function predict() {
 function drawChart(value) {
   const ctx = document.getElementById("riskChart").getContext("2d");
 
-  if (window.riskChart && typeof window.riskChart.destroy === "function") {
-    window.riskChart.destroy();
+  // Destroy previous chart safely
+  if (riskChartObj && typeof riskChartObj.destroy === "function") {
+    riskChartObj.destroy();
   }
 
-  window.riskChart = new Chart(ctx, {
+  riskChartObj = new Chart(ctx, {
     type: "doughnut",
     data: {
       labels: ["Risk", "Safe"],
