@@ -6,7 +6,8 @@ async function predict() {
     const rain = document.getElementById("rain").value;
     const month = Number(document.getElementById("month").value);
     const county = document.getElementById("county").value;
-    const city = document.getElementById("city").value;
+    const city = county;  // using county as location instead
+
     const day = document.getElementById("day").value;
 
     const apiKey = "7f35afb7f560a5f4493ba7fa3f08c60c";
