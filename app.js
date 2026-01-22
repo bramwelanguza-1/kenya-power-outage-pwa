@@ -5,17 +5,26 @@ async function predict() {
   const county = document.getElementById("county").value;
   const city = document.getElementById("city").value;
 
-  // OpenWeatherMap API Key
   const apiKey = "7f35afb7f560a5f4493ba7fa3f08c60c";
 
-  // Fetch real weather
-  const response = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${city},KE&appid=${apiKey}`
-  );
-  const weather = await response.json();
+  let rainReal = false;
 
-  // Determine if it is raining in real weather
-  const rainReal = weather.weather[0].main.toLowerCase().includes("rain");
+  try {
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city},KE&appid=${apiKey}`
+    );
+
+    const weather = await response.json();
+
+    if (response.status !== 200) {
+      throw new Error(weather.message || "Weather API error");
+    }
+
+    rainReal = weather.weather[0].main.toLowerCase().includes("rain");
+  } catch (err) {
+    document.getElementById("comment").innerText =
+      "⚠️ Weather API failed: " + err.message + " (Using default logic)";
+  }
 
   // Prediction logic
   let risk = 0.15;
@@ -46,8 +55,11 @@ async function predict() {
   document.getElementById("result").innerHTML =
     `Estimated outage risk for ${county} (${city}): <span class="${riskClass}">${percentage}%</span>`;
 
-  document.getElementById("comment").innerText =
-    comment + " (Weather from OpenWeatherMap)";
+  // Only overwrite comment if API works
+  if (!document.getElementById("comment").innerText.includes("Weather API failed")) {
+    document.getElementById("comment").innerText =
+      comment + " (Weather from OpenWeatherMap)";
+  }
 
   drawChart(percentage);
 }
